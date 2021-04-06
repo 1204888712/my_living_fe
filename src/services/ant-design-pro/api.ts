@@ -1,7 +1,18 @@
+/*
+ * @LastEditors: liguobiao
+ * @LastEditTime: 2021-04-02 14:56:39
+ */
 // @ts-ignore
 /* eslint-disable */
 import { request } from 'umi';
 
+
+export async function getRoomList(options?: { [key: string]: any }) {
+  return request('/live/livingRoom/roomList', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
   return request<API.CurrentUser>('/api/currentUser', {

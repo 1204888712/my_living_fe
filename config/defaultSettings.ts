@@ -1,6 +1,6 @@
 /*
  * @LastEditors: liguobiao
- * @LastEditTime: 2021-04-01 20:17:36
+ * @LastEditTime: 2021-04-02 13:42:45
  */
 import { Settings as LayoutSettings } from '@ant-design/pro-layout';
 
@@ -14,7 +14,7 @@ const Settings: LayoutSettings & {
   "contentWidth": "Fluid",
   "fixedHeader": false,
   "fixSiderbar": true,
-  "title": "Ant Design Pro",
+  "title": "my-live",
   "pwa": false,
   "iconfontUrl": "",
   "menu": {

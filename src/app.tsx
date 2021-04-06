@@ -1,11 +1,12 @@
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { notification } from 'antd';
-import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
+import type { RequestConfig, RunTimeLayoutConfig} from 'umi';
+import { useModel } from 'umi';
 import { history, Link } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import type { ResponseError } from 'umi-request';
+import type { RequestOptionsInit, ResponseError } from 'umi-request';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 
@@ -23,6 +24,7 @@ export const initialStateConfig = {
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
+  token?: string;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
   const fetchUserInfo = async () => {
@@ -37,9 +39,11 @@ export async function getInitialState(): Promise<{
   // 如果是登录页面，不执行
   if (history.location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
+    const token = localStorage.getItem('token') || undefined;
     return {
       fetchUserInfo,
       currentUser,
+      token,
       settings: {},
     };
   }
@@ -127,7 +131,17 @@ const errorHandler = (error: ResponseError) => {
   throw error;
 };
 
+const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
+  const token: string = localStorage.getItem('token') || ''
+  const authHeader = { Authorization: token };
+  return {
+    url: `${url}`,
+    options: { ...options, interceptors: true, headers: authHeader },
+  };
+};
 // https://umijs.org/zh-CN/plugins/plugin-request
 export const request: RequestConfig = {
   errorHandler,
+  // 新增自动添加AccessToken的请求前拦截器
+  requestInterceptors: [authHeaderInterceptor],
 };

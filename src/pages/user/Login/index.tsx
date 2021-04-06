@@ -6,15 +6,18 @@ import {
   UserOutlined,
   WeiboCircleOutlined,
 } from '@ant-design/icons';
+import type { Dispatch } from 'umi';
 import { Alert, Space, message, Tabs } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { useIntl, Link, history, FormattedMessage, SelectLang, useModel } from 'umi';
 import Footer from '@/components/Footer';
 import { login } from '@/services/ant-design-pro/api';
+import { login as liveLogin } from '@/services/ant-design-pro/live-api';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
-
+import { connect } from 'dva';
 import styles from './index.less';
+import type { StateType } from '@/pages/RoomList/model';
 
 const LoginMessage: React.FC<{
   content: string;
@@ -39,20 +42,36 @@ const goto = () => {
   }, 10);
 };
 
-const Login: React.FC = () => {
+type LoginProps = {
+  dispatch: Dispatch;
+};
+
+const Login: React.FC<LoginProps> = (props) => {
+  const { initialState, setInitialState } = useModel('@@initialState');
   const [submitting, setSubmitting] = useState(false);
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
-  const { initialState, setInitialState } = useModel('@@initialState');
-
   const intl = useIntl();
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
     if (userInfo) {
+      // 自定义的登录
+      const msg2 = await liveLogin({
+        account: 'zhangdaxian@qq.com',
+        password: '123456',
+      });
+      const token = msg2.data;
+      props.dispatch({
+        type: 'global/token',
+        payload: token,
+      });
+
+      localStorage.setItem('token', token);
       setInitialState({
         ...initialState,
         currentUser: userInfo,
+        token,
       });
     }
   };
@@ -301,5 +320,6 @@ const Login: React.FC = () => {
     </div>
   );
 };
-
-export default Login;
+export default connect(({ global }: { global: StateType }) => ({
+  global,
+}))(Login);

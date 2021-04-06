@@ -1,4 +1,8 @@
-﻿export default [
+/*
+ * @LastEditors: liguobiao
+ * @LastEditTime: 2021-04-02 13:25:18
+ */
+export default [
   {
     path: '/user',
     layout: false,
@@ -45,6 +49,12 @@
   {
     path: '/',
     redirect: '/welcome',
+  },
+  {
+    name: 'list.search-list.projects',
+    icon: 'smile',
+    path: '/roomlist',
+    component: './RoomList',
   },
   {
     component: './404',

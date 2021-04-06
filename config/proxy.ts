@@ -12,6 +12,11 @@ export default {
       changeOrigin: true,
       pathRewrite: { '^': '' },
     },
+    '/live/':{
+      target: 'http://localhost:4000',
+      changeOrigin: true,
+      pathRewrite: { '^/live': '' },
+    }
   },
   test: {
     '/api/': {

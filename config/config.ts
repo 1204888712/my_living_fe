@@ -1,3 +1,7 @@
+/*
+ * @LastEditors: liguobiao
+ * @LastEditTime: 2021-04-02 14:10:24
+ */
 // https://umijs.org/config/
 import { defineConfig } from 'umi';
 import { join } from 'path';
@@ -7,7 +11,7 @@ import proxy from './proxy';
 import routes from './routes';
 
 const { REACT_APP_ENV } = process.env;
-
+console.log(proxy[REACT_APP_ENV || 'dev']);
 export default defineConfig({
   hash: true,
   antd: {},

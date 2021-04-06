@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Alert, Typography } from 'antd';
-import { useIntl, FormattedMessage } from 'umi';
+import { useIntl, FormattedMessage, useModel } from 'umi';
 import styles from './Welcome.less';
+
+import { getRoomList } from '@/services/ant-design-pro/api';
 
 const CodePreview: React.FC = ({ children }) => (
   <pre className={styles.pre}>
@@ -14,6 +16,16 @@ const CodePreview: React.FC = ({ children }) => (
 
 export default (): React.ReactNode => {
   const intl = useIntl();
+  const { initialState } = useModel('@@initialState');
+  
+  console.log(initialState);
+  useEffect(()=>{
+    getRoomList().then(()=>{
+      console.log(1111);
+    }).catch(()=>{
+      console.log(222);
+    });
+  })
   return (
     <PageContainer>
       <Card>
